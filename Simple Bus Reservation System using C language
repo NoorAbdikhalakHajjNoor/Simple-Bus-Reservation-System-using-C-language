@@ -1,0 +1,157 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
+#include <string.h>
+#include <time.h>
+#define N 10
+
+struct seat {
+  int seat_number;
+  char name[30];
+  int booked;
+  int bus_number;
+};
+
+struct seat seats[N];
+
+struct bus{
+    int bus_number;
+    char name[30];
+    char destination[50];
+    int charges;
+    char time[10];
+};
+
+struct bus buses[3] = {
+    {1, "Noor Express", "Alor Setar to Kuala Lumpur", 70, "07:00 AM"},
+    {2, "Sayang Express", "Alor Setar to Johor Bahru", 55, "01:30 PM"},
+    {3, "On Time Express", "Alor Setar to Melaka", 100, "03:50 PM"}
+};
+
+void init_seats() {
+  for (int i = 0; i < N; i++) {
+    seats[i].seat_number = i + 1;
+    seats[i].booked = 0;
+  }
+}
+
+void assign_seat_to_bus(int seat_number, int bus_number) {
+    seats[seat_number - 1].bus_number = bus_number;
+}
+
+void book_seat(int seat_number, char* name) {
+  int bus_number;
+  printf("Enter the bus number: ");
+  scanf("%d", &bus_number);
+  if(bus_number<1 || bus_number>3){
+      printf("Invalid bus number entered. Please choose a valid bus number\n");
+  }else {
+    if (seats[seat_number - 1].booked) {
+    printf("Seat already booked.\n");
+  } else {
+    seats[seat_number - 1].booked = 1;
+    strcpy(seats[seat_number - 1].name, name);
+    assign_seat_to_bus(seat_number, bus_number);
+    printf("Thank You. Your seat number is  %d for %s on bus number %d\n", seat_number, name, bus_number);
+  }
+  }
+}
+
+void print_seats() {
+  printf("SEATS\n");
+  printf("-------------------------\n");
+  for (int i = 0; i < N; i++) {
+    if (seats[i].booked) {
+      printf("%d %s\n", seats[i].seat_number, seats[i].name);
+    } else {
+      printf("%d\n", seats[i].seat_number);
+    }
+  }
+}
+
+void print_seats_for_one_bus() {
+    int bus_number;
+    printf("Enter the bus number: ");
+    scanf("%d", &bus_number);
+    if(bus_number<1 || bus_number>3){
+      printf("Invalid bus number entered. Please choose a valid bus number\n");
+    }else{
+        printf("SEATS FOR BUS %d \n");
+        printf("-------------------------\n");
+        for (int i = 0; i < N; i++) {
+            if (seats[i].booked && seats[i].bus_number == bus_number) {
+                printf("%d %s\n", seats[i].seat_number, seats[i].name);
+            } else if (seats[i].bus_number == bus_number) {
+                printf("%d\n", seats[i].seat_number);
+            }
+        }
+    }
+}
+
+void bus_choice()
+{
+    printf("-----------------------------------------------------------------------------------------");
+    printf("\nBus.No\tName\t\t\tDestinations  \t\tCharges  \t\tTime\n");
+    printf("-----------------------------------------------------------------------------------------");
+    printf("-----------------------------------------------------------------------------------------");
+    for(int i=0;i<3;i++){
+        printf("\n%d\t%s\t\t%s\t\t%d\t\t\t%s",buses[i].bus_number,buses[i].name,buses[i].destination,buses[i].charges,buses[i].time);
+    }
+}
+
+void login(){
+    int password;
+    char username[20];
+    
+    printf("**************************************************************************************************************\n");
+    printf("********************************* WELCOME TO BUS RESERVATION SYSTEM ******************************************\n");
+    printf("**************************************************************************************************************\n");
+    printf("USERNAME: ");
+    scanf("%s", username);
+    printf("PASSWORD: ");
+    scanf("%d", &password);
+}
+
+int main() {
+  int choice;
+  int seat_number;
+  char name[30];
+  login();
+  init_seats();
+   
+  while (1) {
+    printf("\nWelcome to the bus reservation system.\n");
+    printf("1. View all seats\n");
+    printf("2. Book a seat\n");
+    printf("3. View seats for a specific bus\n");
+    printf("4. List available buses\n");
+    printf("5. Exit\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+    switch (choice) {
+      case 1:
+        print_seats();
+        break;
+      case 2:
+        printf("Enter seat number: ");
+        scanf("%d", &seat_number);
+        printf("Enter name: ");
+        scanf("%s", name);
+        book_seat(seat_number, name);
+        break;
+      case 3:
+        print_seats_for_one_bus();
+        break;
+      case 4:
+        bus_choice();
+        break;
+      case 5:
+        exit(0);
+        break;
+      default:
+        printf("Invalid choice.\n");
+        break;
+    }
+  }
+  return 0;
+}
